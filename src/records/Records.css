@@ -1,0 +1,17 @@
+dd {
+  padding-top: 10px; }
+
+audio {
+  vertical-align: middle; }
+
+dt {
+  padding: 0.5em;
+  cursor: pointer; }
+
+dt:hover {
+  background-color: #ddddda;
+  font-weight: bold; }
+
+dt:hover::after {
+  font-family: FontAwesome;
+  content: " \f01d"; }
