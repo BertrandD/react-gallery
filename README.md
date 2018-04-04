@@ -1,5 +1,7 @@
 # react-gallery
 
+[![Build Status](https://travis-ci.org/BertrandD/react-gallery.svg?branch=master)](https://travis-ci.org/BertrandD/react-gallery)
+
 Some component I wan to share between my projects. 
 
 `
