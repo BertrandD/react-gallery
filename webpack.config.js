@@ -20,6 +20,14 @@ module.exports = {
                 }
             },
             {
+                test: /\.css$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }]
+            },
+            {
                 test: /\.scss$/,
                 use: [{
                     loader: "style-loader" // creates style nodes from JS strings
@@ -28,6 +36,10 @@ module.exports = {
                 }, {
                     loader: "sass-loader" // compiles Sass to CSS
                 }]
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                loader: 'file-loader?name=public/fonts/[name].[ext]'
             }
         ]
     },

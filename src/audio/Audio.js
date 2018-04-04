@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import $ from "jquery";
 import './fontawesome.css'
 import './Audio.css'
+import { log } from 'util';
 
 const AudioPlayer = (function () {
 
@@ -356,7 +357,11 @@ AudioPlayerUI.prototype._unbindEvents = function () {
 };
 
 class Audio extends Component {
-    audioPlayer;
+    constructor(p) {
+        super(p);
+        this.audioPlayer = null;
+        this.handleEvent = this.handleEvent.bind(this);
+    }
 
     componentDidMount() {
         if (this.props.songs) {
@@ -364,6 +369,7 @@ class Audio extends Component {
                 el: this.div,
                 songs: this.props.songs
             });
+            document.addEventListener("keydown", this.handleEvent, false);
         }
     }
 
@@ -373,6 +379,23 @@ class Audio extends Component {
             this.audioPlayer.play()
         }
     }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleEvent, false);
+    }
+
+    handleEvent(event) {
+        switch (event.keyCode) {
+            case 32:
+                this.audioPlayer.togglePlayPause();
+                event.stopPropagation();
+                event.preventDefault();
+                break;
+            default:
+                break
+        }
+    }
+
 
     render() {
         return (
