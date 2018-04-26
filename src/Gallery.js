@@ -10,6 +10,8 @@ class Gallery extends Component {
             photo: -1,
             loading: true,
             xDiff: 0,
+            e: 1,
+            items: [props.photos.files[0]],
             alb: []
         };
 
@@ -28,6 +30,7 @@ class Gallery extends Component {
         this.handleTouchMove = this.handleTouchMove.bind(this);
         this.handleTouchStart = this.handleTouchStart.bind(this);
         this.handleTouchEnd = this.handleTouchEnd.bind(this);
+        this.loadMore = this.loadMore.bind(this);
 
         if (window.innerWidth > 1280) {
             this.resolution = "1920x1080";
@@ -142,8 +145,27 @@ class Gallery extends Component {
         }
     }
 
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            e: 1,
+            items: [newProps.photos.files[0]],
+        })
+    }
+
     prevent(e) {
         e.stopPropagation();
+    }
+
+    loadMore() {
+        if (this.props.photos.files[this.state.e]) {
+            this.setState({
+                e: this.state.e + 1,
+                items: [
+                    ...this.state.items,
+                    this.props.photos.files[this.state.e]
+                ]
+            })
+            }
     }
 
     render() {
@@ -194,9 +216,10 @@ class Gallery extends Component {
                     </div>
                 )}
                 <div className="Gallery">
-                    {this.props.photos.files.map((photo, index) =>
-                        <Photo handleClick={this.handlePhotoClick.bind(null, index, this.props.photos.files)} staticUrl={staticUrl} key={photo.path} photo={photo}
-                               size="thumb"/>
+                    {this.state.items.map((photo, index) => (<div>
+                        <Photo onLoaded={this.loadMore} handleClick={this.handlePhotoClick.bind(null, index, this.props.photos.files)} staticUrl={staticUrl} key={photo.path} photo={photo}
+                            size="thumb"/>
+                    </div>)
                     )}
                 </div>
                 {this.props.photos.subalbums && this.props.photos.subalbums.map((sub) => {

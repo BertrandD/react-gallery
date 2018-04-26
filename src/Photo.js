@@ -6,7 +6,7 @@ class Photo extends Component {
         const photo = this.props.photo;
         return (
             <div className="Photo">
-                <img onClick={this.props.handleClick && this.props.handleClick.bind(null, photo)} src={this.props.staticUrl + photo.src[this.props.size]} alt=""/>
+                <img onLoad={this.props.onLoaded && this.props.onLoaded.bind(null)} onClick={this.props.handleClick && this.props.handleClick.bind(null, photo)} src={this.props.staticUrl + photo.src[this.props.size]} alt=""/>
             </div>
         );
     }

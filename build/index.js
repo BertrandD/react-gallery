@@ -580,7 +580,7 @@ var Photo = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 { className: 'Photo' },
-                _react2.default.createElement('img', { onClick: this.props.handleClick && this.props.handleClick.bind(null, photo), src: this.props.staticUrl + photo.src[this.props.size], alt: '' })
+                _react2.default.createElement('img', { onLoad: this.props.onLoaded && this.props.onLoaded.bind(null), onClick: this.props.handleClick && this.props.handleClick.bind(null, photo), src: this.props.staticUrl + photo.src[this.props.size], alt: '' })
             );
         }
     }]);
@@ -1089,6 +1089,8 @@ var _Photo2 = _interopRequireDefault(_Photo);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1107,6 +1109,8 @@ var Gallery = function (_Component) {
             photo: -1,
             loading: true,
             xDiff: 0,
+            e: 1,
+            items: [props.photos.files[0]],
             alb: []
         };
 
@@ -1125,6 +1129,7 @@ var Gallery = function (_Component) {
         _this.handleTouchMove = _this.handleTouchMove.bind(_this);
         _this.handleTouchStart = _this.handleTouchStart.bind(_this);
         _this.handleTouchEnd = _this.handleTouchEnd.bind(_this);
+        _this.loadMore = _this.loadMore.bind(_this);
 
         if (window.innerWidth > 1280) {
             _this.resolution = "1920x1080";
@@ -1251,9 +1256,27 @@ var Gallery = function (_Component) {
             }
         }
     }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(newProps) {
+            this.setState({
+                e: 1,
+                items: [newProps.photos.files[0]]
+            });
+        }
+    }, {
         key: 'prevent',
         value: function prevent(e) {
             e.stopPropagation();
+        }
+    }, {
+        key: 'loadMore',
+        value: function loadMore() {
+            if (this.props.photos.files[this.state.e]) {
+                this.setState({
+                    e: this.state.e + 1,
+                    items: [].concat(_toConsumableArray(this.state.items), [this.props.photos.files[this.state.e]])
+                });
+            }
         }
     }, {
         key: 'render',
@@ -1341,9 +1364,13 @@ var Gallery = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'Gallery' },
-                    this.props.photos.files.map(function (photo, index) {
-                        return _react2.default.createElement(_Photo2.default, { handleClick: _this2.handlePhotoClick.bind(null, index, _this2.props.photos.files), staticUrl: staticUrl, key: photo.path, photo: photo,
-                            size: 'thumb' });
+                    this.state.items.map(function (photo, index) {
+                        return _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(_Photo2.default, { onLoaded: _this2.loadMore, handleClick: _this2.handlePhotoClick.bind(null, index, _this2.props.photos.files), staticUrl: staticUrl, key: photo.path, photo: photo,
+                                size: 'thumb' })
+                        );
                     })
                 ),
                 this.props.photos.subalbums && this.props.photos.subalbums.map(function (sub) {
